@@ -1,0 +1,87 @@
+.login-page {
+  min-height: 100vh;
+  width: 100%;
+  background-image: url("/loginbg.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; /* IMPORTANT */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.login-box {
+  width: 380px;
+  min-height: 520px;
+  padding: 50px 40px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.login-box h2 {
+  color:whitesmoke;
+  text-align: center;
+  margin-bottom: 35px;
+  font-size: 26px;
+}
+
+.login-box input {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 22px;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.login-box input::placeholder {
+  color: #ddd;
+}
+
+.login-box input:focus {
+  outline: 2px solid #4facfe;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #4facfe, #00f2fe);
+  color: #fff;
+  font-size: 17px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.login-btn:hover {
+  opacity: 0.9;
+}
+
+.login-footer {
+  margin-top: 25px;
+  display: flex;
+  justify-content: space-between;
+  color: #ddd;
+  font-size: 14px;
+}
+
+.login-footer span {
+  cursor: pointer;
+}
+
+.login-footer span:hover {
+  text-decoration: underline;
+}
+
+.forgot {
+  font-size: 14px;
+}
