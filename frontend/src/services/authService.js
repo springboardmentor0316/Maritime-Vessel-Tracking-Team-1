@@ -1,32 +1,36 @@
-// Mock Authentication Service (Week 1)
+import axios from 'axios';
 
-export const login = async (role) => {
-  if (!role) {
-    throw new Error("Role is required");
+// Real Authentication Service
+
+export const login = async (username, password) => {
+  try {
+    const response = await axios.post('/api/token/', { username, password });
+    const { access, refresh } = response.data;
+    localStorage.setItem('access_token', access);
+    localStorage.setItem('refresh_token', refresh);
+    return { token: access, role: 'user' }; // Adjust role as needed
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || 'Login failed');
   }
-
-  // simulate API delay
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        token: "mock-jwt-token",
-        role: role,
-      });
-    }, 500);
-  });
 };
 
-export const register = async (username, email, password) => {
-  if (!username || !email || !password) {
-    throw new Error("All fields are required");
+export const register = async (username, email, password, role = 'OPERATOR') => {
+  try {
+    const response = await axios.post('/api/accounts/register/', { username, password, role });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || 'Registration failed');
   }
+};
 
-  // simulate API delay
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        message: "Registration successful",
-      });
-    }, 500);
-  });
+export const getProfile = async () => {
+  try {
+    const token = localStorage.getItem('access_token');
+    const response = await axios.get('/api/accounts/profile/', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || 'Failed to fetch profile');
+  }
 };

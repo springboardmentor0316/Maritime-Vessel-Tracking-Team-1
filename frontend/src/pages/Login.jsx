@@ -1,32 +1,30 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { login } from "../services/authService";
 import "./Login.css";
 
 const Login = () => {
   const navigate = useNavigate();
-
   const [isLogin, setIsLogin] = useState(true);
 
-  // login fields
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  // register fields
   const [username, setUsername] = useState("");
+  const [error, setError] = useState("");
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-
-    // mock login
-    localStorage.setItem("user", email);
-    navigate("/dashboard");
+    try {
+      await login(email, password);
+      navigate("/dashboard");
+    } catch (err) {
+      setError("Invalid credentials");
+    }
   };
 
   const handleRegister = (e) => {
     e.preventDefault();
-
-    // mock register
-    alert("Registered successfully! Now login.");
+    alert("Registered successfully! Please login.");
     setIsLogin(true);
   };
 
@@ -34,6 +32,8 @@ const Login = () => {
     <div className="login-page">
       <div className="login-box">
         <h2>{isLogin ? "Maritime Portal Login" : "Create Account"}</h2>
+
+        {error && <p className="error">{error}</p>}
 
         <form onSubmit={isLogin ? handleLogin : handleRegister}>
           {!isLogin && (
@@ -77,7 +77,6 @@ const Login = () => {
               >
                 Forgot Password?
               </span>
-
             </>
           ) : (
             <span onClick={() => setIsLogin(true)}>Back to Login</span>

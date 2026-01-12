@@ -1,11 +1,52 @@
+import { useState, useEffect } from "react";
+import { getProfile } from "../services/authService";
+
 const Dashboard = () => {
-  const role = localStorage.getItem("role");
+  const [profile, setProfile] = useState(null);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const data = await getProfile();
+        setProfile(data);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      fetchProfile();
+    } else {
+      setError("Please login first.");
+    }
+  }, []);
+
+  if (error) {
+    return (
+      <div className="container mt-4">
+        <h1>Dashboard</h1>
+        <div className="alert alert-danger">{error}</div>
+      </div>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <div className="container mt-4">
+        <h1>Dashboard</h1>
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="container mt-4">
       <h1>Dashboard</h1>
+      <p>Welcome, {profile.username}!</p>
 
-      {role === "operator" && (
+      {profile.role === "OPERATOR" && (
         <div className="card p-3 mt-3">
           <h3>Operator Panel</h3>
           <p>Active Vessels: 12</p>
@@ -13,7 +54,7 @@ const Dashboard = () => {
         </div>
       )}
 
-      {role === "analyst" && (
+      {profile.role === "ANALYST" && (
         <div className="card p-3 mt-3">
           <h3>Analyst Panel</h3>
           <p>Reports Generated: 8</p>
@@ -21,15 +62,13 @@ const Dashboard = () => {
         </div>
       )}
 
-      {role === "admin" && (
+      {profile.role === "ADMIN" && (
         <div className="card p-3 mt-3">
           <h3>Admin Panel</h3>
           <p>Total Users: 25</p>
           <p>System Status: OK</p>
         </div>
       )}
-
-      {!role && <p>Please login first.</p>}
     </div>
   );
 };
