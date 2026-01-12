@@ -1,15 +1,26 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden; /* prevents scrolling */
+}
+
 .login-page {
   min-height: 100vh;
-  width: 100%;
-  background-image: url("/loginbg.jpeg");
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed; /* IMPORTANT */
+  width: 100vw;
+
   display: flex;
   justify-content: center;
   align-items: center;
-}
 
+  background-image: url("/loginbg.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* 🔥 key line */
+
+  font-family: "Segoe UI", sans-serif;
+}
 
 .login-box {
   width: 380px;
@@ -22,6 +33,8 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  max-height: 90vh;
+  overflow: hidden;
 }
 
 .login-box h2 {
