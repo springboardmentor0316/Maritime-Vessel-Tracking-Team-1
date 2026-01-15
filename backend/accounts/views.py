@@ -53,6 +53,7 @@ class ForgotPasswordView(APIView):
         user.reset_otp = otp
         user.otp_created_at = timezone.now()
         user.save()
+        
         print("EMAIL_HOST_USER =", settings.EMAIL_HOST_USER)
 
         send_mail(
