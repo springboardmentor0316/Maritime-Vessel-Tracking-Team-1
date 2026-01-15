@@ -1,64 +1,43 @@
-/*import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "./Login.css";
-
-const ForgotPassword = () => {
-  const [email, setEmail] = useState("");
-  const navigate = useNavigate();
-
-  const handleSendOTP = (e) => {
-    e.preventDefault();
-
-    // mock OTP send
-    localStorage.setItem("resetEmail", email);
-    alert("OTP sent to your email (mock)");
-    navigate("/verify-otp");
-  };
-
-  return (
-    <div className="login-page">
-      <div className="login-box">
-        <h2>Forgot Password</h2>
-
-        <form onSubmit={handleSendOTP}>
-          <input
-            type="email"
-            placeholder="Enter registered email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-
-          <button className="login-btn">Send OTP</button>
-        </form>
-      </div>
-    </div>
-  );
-};
-
-export default ForgotPassword; */
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { forgotPassword } from "../services/authService";
 import "./Login.css";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSendOTP = (e) => {
+  const handleSendOTP = async (e) => {
     e.preventDefault();
-    localStorage.setItem("resetEmail", email);
-    alert("OTP sent to your email (mock)");
-    navigate("/verify-otp");
+    setError("");
+    setLoading(true);
+
+    try {
+      await forgotPassword(email);
+      navigate("/verify-otp", { state: { email } });
+    } catch (err) {
+      setError(
+        err.response?.data?.detail || "Failed to send OTP. Try again."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="login-page">
       <div className="login-box">
         <h2>Forgot Password</h2>
-        <p style={{color: "#ddd", textAlign: "center", marginBottom: "20px"}}>
-          Enter your email to receive an OTP code.
+
+        <p style={{ color: "#ddd", textAlign: "center", marginBottom: "20px" }}>
+          Enter your registered email to receive an OTP.
         </p>
+
+        {error && (
+          <p style={{ color: "#ff4d4d", textAlign: "center" }}>{error}</p>
+        )}
 
         <form onSubmit={handleSendOTP}>
           <input
@@ -68,7 +47,10 @@ const ForgotPassword = () => {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <button className="login-btn">Send OTP</button>
+
+          <button className="login-btn" disabled={loading}>
+            {loading ? "Sending OTP..." : "Send OTP"}
+          </button>
         </form>
 
         <div className="login-footer">
